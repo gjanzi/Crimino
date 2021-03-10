@@ -6,34 +6,69 @@ navbarPage("Crimino", collapsible = TRUE, inverse = TRUE, theme = "bootstrap.css
                                                   img(src = "Chicago.bean.png", height = 200, width = 200, align = "center")),
                       mainPanel = mainPanel(
                         tabsetPanel(
-                          tabPanel("Platform", p("Crimino is a platform which aims to shed light on patterns of crime in the city of Chicago. 
-By making use of a dataset extracted from the Chicago Police department for the year 2020, this platform offers you the possibility to view and analyze criminal data in different formats.
-The general aim of Crimino is to expose patterns that could not previously be seen by the naked eye and help law enforcement distinguish connections between crime type, location and time. 
-In addition to the overview provided in Data explorer and Interactive map, Crimino provides an advanced analysis via link prediction to try and predict crime cooccurrence.
+                           tabPanel("Platform", 
+                                     br(),
+                            p("Crimino is a platform which aims to shed light on patterns of crime in the city of Chicago. 
+By making use of a dataset extracted from the Chicago Police department for the year 2020, this platform offers you the possibility to view and analyze criminal data in different formats."),
+
+p("The general aim of Crimino is to expose patterns that could not previously be seen by the naked eye and help law enforcement distinguish connections between crime type, location and time."),
+
+p("In addition to the overview provided in Data explorer and Interactive map, Crimino provides an advanced analysis via link prediction to try and predict crime cooccurrence.
 Finally, Crimino provides a node similarity analysis to spot similarities across the wards of Chicago in terms of crime type and demographics.")),
-                          tabPanel("Team", p("Meet the team behind Crimino!"))
-                        )
-                      )),
+                            tabPanel("Team",
+                                     br(),
+                                     p("Meet the team behind Crimino! A team of students of Business Information Management at RSM who aim to help you explore the crime network in Chicago."),
+                                     br(),
+                                     fluidRow(
+                                       column(3, 
+img(src = "Klea.png", height = 100, width = 100),
+img(src = "Wesley.png", height = 100, width = 100),
+img(src = "Maria.png", height = 100, width = 100),
+img(src = "Jelle.png", height = 100, width = 100)),
+
+column(4, 
+p("Klea Gjana"),
+p("BIM student"),
+br(),
+br(),
+br(),
+p("Wesley Kruijthof"),
+p("BIM student"),
+br(),
+br(),
+br(),
+p("Maria Pelos Melo"),
+p("BIM student"),
+br(),
+br(),
+br(),
+p("Jelle van der Grijn"),
+p("BIM student"))
+                          
+                        ))))),
            ),
            tabPanel("Data Explorer",
                     p("Have you ever wondered what the most recurring crime type was in a specific location or specific point in time? Data Explorer allows you to check crime statistics for your ward in the desired date range."),
                     fluidPage(
                       tabsetPanel(
-                        tabPanel("Summary Statistics", 
+                        tabPanel("Explore the Dataset", 
                                  fluidPage (
-                                   titlePanel("Data Descriptives"),
+                                   titlePanel("Data Explorer Descriptives"),
                                    
                                    sidebarLayout(
                                      
                                      sidebarPanel(
+                                                p("Here you can find overall descriptives on the crime in Chicago in 2017. There are in total 254 different types of crimes happening accross 50 wards. 
+                                                       In total, there are around 30.000 crime cases in more that 28.000 different specific locations")
+                                              br(),
                                        tableOutput("tb.descriptives")
                                      ),
                                      
                                      mainPanel (
                                        tabsetPanel(
-                                         tabPanel("Ward", plotOutput("hist.ward")),
-                                         tabPanel("Primary Type", plotOutput("hist.Primary.Type")),
-                                         tabPanel("Description", plotOutput("hist.Description"))
+                                         tabPanel("Wards", plotOutput("hist.ward")),
+                                         tabPanel("Crimes", plotOutput("hist.Primary.Type")),
+                                         tabPanel("Crime Descriptions", plotOutput("hist.Description"))
                                        ),
                                        tableOutput("tb.locations")
                                      )
@@ -41,31 +76,37 @@ Finally, Crimino provides a node similarity analysis to spot similarities across
                                  )
                                  ),
                         tabPanel("Explore Crime", 
-                                 titlePanel('Data Explorer Crime Type'),
+                                 titlePanel('Data Explorer Crime Types'),
                                  sidebarLayout(
                                    sidebarPanel(
+                                              p(" Through the "Data Explorer Crime Types" you can choose a crime type and check the frequency of this crime type per ward in the specified date range. 
+                                                       You also have the possibility to check the total amount that this crime has happened in all wards in the specified date range under the column 'Total'."),
+                                            br(), 
                                      selectInput(inputId = 'crime.type', label = 'Select Crime Trype', 
                                                  choices = c(as.vector(unique(dt.crimes$Primary.Type)), 'All Crimes')),
                                      dateRangeInput(inputId = 'daterange.crime', label = 'Select Date Range', 
                                                     start = '2017-01-01', end = '2017-12-31', format = 'yyyy-mm-dd')),
                                    mainPanel(
                                      tabsetPanel(
-                                       tabPanel('Ward Table', 
+                                       tabPanel('Overview', 
                                                 {DT::DTOutput('summarytable.crime')}),
-                                       tabPanel('Ward Chart',
+                                       tabPanel('Chart',
                                                 {plotOutput('hist.crime')})
                                      )))),
                         tabPanel("Explore Wards", 
-                                 titlePanel('Explore Wards'),
+                                 titlePanel('Data Explorer Wards'),
                                  sidebarLayout(
                                    sidebarPanel(
+                                              p(" Through the "Data Explorer Wards" you can choose a ward and check the crime types that have happened in that ward in the specified date range.
+                                                       You also have the possibility to check how many times each crime type has happened and the total amount of that type of crime for the chosen ward.")
+                                            br(),
                                      selectInput(inputId = 'ward', label = 'Select Ward', choices = c(as.vector(unique(dt.crimes$Ward)), 'All Wards')),
                                      dateRangeInput(inputId = 'daterange', label = 'Select Date Range', start = '2017-01-01', end = '2017-12-31', format = 'yyyy-mm-dd')),
                                    mainPanel(
                                      tabsetPanel(
-                                       tabPanel('Table', 
+                                       tabPanel('Overview', 
                                                 {DT::DTOutput('summarytable')}),
-                                       tabPanel('Histogram',
+                                       tabPanel('Chart',
                                                 {plotOutput('hist')})
                                      ))))
                       ))),
